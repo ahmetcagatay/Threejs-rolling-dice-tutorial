@@ -1,3 +1,37 @@
+
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .chart-container {
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+  }
+  
+  .result-display {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 50px;
+  }
+  #polar-area-chart{
+    position: absolute;
+    z-index: 10;
+  }
+  
+
+  
+
 *,
 *::after,
 *::before {
@@ -12,7 +46,7 @@
 	--color-link-hover: #000;
 }
 
-body {
+/* body {
 	margin: 0;
 	color: var(--color-text);
 	background-color: var(--color-bg);
@@ -20,7 +54,7 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	overflow: hidden;
-}
+} */
 
 /* Page Loader */
 .js .loading::before,
@@ -187,7 +221,7 @@ main {
 	height: 100%;
 }
 
-canvas {
+#canvas {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -204,9 +238,27 @@ canvas {
 	pointer-events: none;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
 .score {
-	font-weight: bold;
+  font-family: 'Roboto', sans-serif; /* Modern bir font */
+  font-weight: bold;
+  font-size: 30px; /* Daha büyük font boyutu */
+  color: #29D7FF; /* Modern bir mavi tonu */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); /* Hafif ve yumuşak gölgelendirme */
+  float: none; /* Modern layout'larda float genellikle kullanılmaz */
+  display: inline-block; /* Yerine display kullanabiliriz */
+  padding: 15px 20px; /* Yeterli padding */
+  margin: 10px; /* Biraz marjin */
+  background-color: #1A1A1A; /* Koyu arka plan, içerik ön planda dursun diye */
+  border-radius: 5px; /* Yuvarlak köşeler */
+  border: 2px solid #29D7FF; /* Kenarlık rengi metin rengiyle uyumlu */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Dış gölgelendirme efekti */
+  transition: transform 0.2s, box-shadow 0.2s; /* Animasyonlar için geçiş süresi */
+  padding-top: 100px;
 }
+
+
 
 .ui-controls #score-result {
 	display: inline-block;
@@ -236,3 +288,6 @@ canvas {
 .ui-controls #roll-btn:hover {
 	background-color: #3737af;
 }
+
+
+

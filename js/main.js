@@ -5,7 +5,7 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
 const canvasEl = document.querySelector('#canvas');
 const scoreResult = document.querySelector('#score-result');
-const rollBtn = document.querySelector('#roll-btn');
+// const rollBtn = document.querySelector('#roll-btn');
 
 let renderer, scene, camera, diceMesh, physicsWorld;
 
@@ -23,8 +23,8 @@ initPhysics();
 initScene();
 
 window.addEventListener('resize', updateSceneSize);
-window.addEventListener('dblclick', throwDice);
-rollBtn.addEventListener('click', throwDice);
+window.addEventListener('dblclick', () => throwDice());
+document.getElementById('polar-area-chart').addEventListener('click', () => throwDice());
 
 function initScene() {
 
@@ -61,7 +61,7 @@ function initScene() {
         addDiceEvents(diceArray[i]);
     }
 
-    throwDice();
+    // throwDice();
 
     render();
 }
@@ -271,7 +271,8 @@ function addDiceEvents(dice) {
 function showRollResults(score) {
     if (scoreResult.innerHTML === '') {
         scoreResult.innerHTML += score;
-    } else {
+    }
+    else {
         scoreResult.innerHTML += ('+' + score);
     }
 }
@@ -294,11 +295,12 @@ function updateSceneSize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function throwDice() {
+function throwDice(additionalScore = 0) {
     scoreResult.innerHTML = '';
 
-    diceArray.forEach((d, dIdx) => {
+    let totalScore = additionalScore; // Zarların ve eklenen skorun toplamını hesaplamak için bir değişken
 
+    diceArray.forEach((d, dIdx) => {
         d.body.velocity.setZero();
         d.body.angularVelocity.setZero();
 
@@ -315,5 +317,96 @@ function throwDice() {
         );
 
         d.body.allowSleep = true;
+
+        // // Örnek bir zar sonucu, gerçek değer hesaplamaları yerine geçici olarak kullanılıyor
+        // const diceScore = Math.floor(Math.random() * 6) + 1; // 1 ile 6 arasında rastgele bir sayı
+        totalScore;
     });
+
+    // Toplam skoru göster
+    scoreResult.innerHTML = '' + totalScore.toString();
 }
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('polar-area-chart').getContext('2d');
+    const categories = [
+      { name: 'INT', sub: { Craft: 0, Teach: 2, Learn: 1 }, color: 'rgb(68, 114, 196)' },
+      { name: 'WIS', sub: { Magic: 0, Spell: 0, Memory: 2 }, color: 'rgb(32, 56, 100)' },
+      { name: 'WIL', sub: { Mystic: 0, Focus: 1, Mental: 2 }, color: 'rgb(112, 48, 160)' },
+      { name: 'PER', sub: { Ranged: 0, Art: 2, Detect: 0 }, color: 'rgb(176, 99, 148)' },
+      { name: 'LCK', sub: { Critic: 2, Call: 0, Try: 0 }, color: 'rgb(59, 56, 56)' },
+      { name: 'CHA', sub: { Speak: 0, Drama: 0, Lead: 3 }, color: 'rgb(132, 60, 12)' },
+      { name: 'STR', sub: { Muscle: 0, Martial: 0, Heavy: 4 }, color: 'rgb(204, 0, 0)' },
+      { name: 'CON', sub: { Heal: 2, Live: 2, Pole: 0 }, color: 'rgb(255, 51, 0)' },
+      { name: 'AGI', sub: { Acrobat: 2, Karate: 0, Shield: 0 }, color: 'rgb(255, 192, 0)' },
+      { name: 'SPD', sub: { Hand: 2, Stealth: 1, Light: 0 }, color: 'rgb(112, 173, 71)' }
+    ];
+  
+    const subCategories = categories.flatMap(category =>
+      Object.keys(category.sub).map(sub => `${sub} - (${category.name})`)
+    );
+  
+    const subCategoryColors = categories.flatMap(category =>
+      Object.keys(category.sub).map(sub => category.color)
+    );
+  
+    const dataValues = categories.flatMap(category =>
+      Object.values(category.sub)
+    );
+  
+    const backgroundColors = subCategories.map((sub, i) =>
+      `${subCategoryColors[i].replace('rgb', 'rgba').replace(')', ', 0.8)')}`
+    );
+  
+    const borderColors = subCategoryColors;
+  
+    new Chart(ctx, {
+      type: 'polarArea',
+      data: {
+        labels: subCategories,
+        datasets: [{
+          data: dataValues,
+          backgroundColor: backgroundColors,
+          borderColor: borderColors,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+                const activeIndex = activeElements[0].index;
+                console.log(activeIndex);
+                const activeValue = dataValues[activeIndex];
+                throwDice(activeValue);
+            }
+        },
+        scales: {
+          r: {
+            max: dataValues, min: -1,
+            ticks: {
+              stepSize: 1,
+              display: false
+            },
+            grid: {
+              offset: true
+            }
+          }
+        },
+        plugins: {
+          datalabels: {
+            backgroundColor: context => context.dataset.backgroundColor,
+            borderRadius: 4,
+            color: 'black',
+            font: { weight: 'bold' },
+            formatter: (value) => value,
+          },
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+    
+//   });
+  
